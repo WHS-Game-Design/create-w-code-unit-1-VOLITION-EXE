@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class layerController : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -24,35 +24,36 @@ public class PlayerController : MonoBehaviour
     public float boostPower;
     public float speedBoost;
     public float addBoost;
+    public float _addBoost
+    {get{return addBoost;}}
     public float endTime; 
     public float startTime;
     void Update()
     {
-        horizontalInput = -1 * Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
         if (addBoost == boostPower){
         speedBoost += Mathf.Abs(horizontalInput * Time.deltaTime * verticalInput);
         }
         if (horizontalInput == 0 && verticalInput != 0 && speedBoost > 3 && speedBoost <= 8) {
             addBoost = boostPower * 1.5f;
         } else if (horizontalInput == 0 && verticalInput != 0 && speedBoost > 8 && speedBoost <= 13) {
-            addBoost = boostPower * 2f;
+            addBoost = boostPower * 2.25f;
         } else if (horizontalInput == 0 && verticalInput != 0 && speedBoost > 13) {
-            addBoost = boostPower * 2.5f;
+            addBoost = boostPower * 3f;
         } 
         if (horizontalInput == 0){
             speedBoost = 0;
         }
-        if (addBoost != boostPower)
-        {
+        if (addBoost != boostPower){
             endTime -= Time.deltaTime;
         }
         if (endTime < 0){
             addBoost = 1;
             endTime = startTime;
         }
-        
         Move = Vector3.ClampMagnitude(Move, limiter * addBoost);
+
+        horizontalInput = -1 * Input.GetAxis("Horizontal");
+        verticalInput = Input.GetAxis("Vertical");
 
         Move += speed * verticalInput * Time.deltaTime * addBoost * Vector3.forward;
 
